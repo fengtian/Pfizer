@@ -2,15 +2,24 @@ package com.tian;
 
 
 import java.io.Serializable;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
+import javax.faces.event.AbortProcessingException;
 import javax.faces.event.ActionEvent;
- 
+import javax.faces.event.ValueChangeEvent;
+import javax.faces.event.ValueChangeListener;
+
 import org.primefaces.event.ScheduleEntryMoveEvent;
 import org.primefaces.event.ScheduleEntryResizeEvent;
 import org.primefaces.event.SelectEvent;
@@ -19,8 +28,11 @@ import org.primefaces.model.DefaultScheduleModel;
 import org.primefaces.model.LazyScheduleModel;
 import org.primefaces.model.ScheduleEvent;
 import org.primefaces.model.ScheduleModel;
+
+import com.mysql.jdbc.PreparedStatement;
+import com.mysql.jdbc.ResultSet;
  
-@ManagedBean
+@ManagedBean(name="scheduleView")
 @ViewScoped
 public class ScheduleView implements Serializable {
  
@@ -29,8 +41,14 @@ public class ScheduleView implements Serializable {
     private ScheduleModel lazyEventModel;
  
     private ScheduleEvent event = new DefaultScheduleEvent();
+    
+    private String currentDoctorName;
  
-    @PostConstruct
+
+
+
+
+	@PostConstruct
     public void init() {
         eventModel = new DefaultScheduleModel();
         eventModel.addEvent(new DefaultScheduleEvent("Champions League Match", previousDay8Pm(), previousDay11Pm()));
@@ -51,6 +69,53 @@ public class ScheduleView implements Serializable {
         };
     }
      
+	public String getCurrentDoctorName() {
+		return currentDoctorName;
+	}
+
+
+	public void setCurrentDoctorName(String currentDoctorName) {
+		this.currentDoctorName = currentDoctorName;
+	}
+
+    
+    public void setupDoctorModel() throws ClassNotFoundException, SQLException{
+        eventModel = new DefaultScheduleModel();
+        ArrayList<DefaultScheduleEvent> appointments = getCurrentDoctorAppoint();
+        for(DefaultScheduleEvent e : appointments){
+        	eventModel.addEvent(e);
+        }
+
+    }
+    
+    private ArrayList<DefaultScheduleEvent> getCurrentDoctorAppoint() throws ClassNotFoundException, SQLException {
+    	ArrayList<DefaultScheduleEvent> appointments = new ArrayList<DefaultScheduleEvent>();
+    	Class.forName("com.mysql.jdbc.Driver");
+		Connection con = DriverManager.getConnection("jdbc:mysql://localhost/Pfizer","root","");
+    	//Statement stmt = con.createStatement();
+    	//ResultSet rows = (ResultSet) stmt.executeQuery("select * from Appointment, Doctor where Doctor.name = ? and Doctor.id = Appointment.doctor");
+    	PreparedStatement pstmt = (PreparedStatement) con.prepareStatement("select * from Appointment, Doctor where Doctor.name = ? and Doctor.id = Appointment.doctor");
+    	pstmt.setString(1, currentDoctorName);
+    	ResultSet rows = (ResultSet) pstmt.executeQuery();
+		String synoppsis = "";
+    	Date stime = null;
+    	Date etime = null;
+    	while(rows.next()){
+    		synoppsis = rows.getString(3);
+    		stime = rows.getDate(6);
+    		etime = rows.getDate(7);
+    		appointments.add(new DefaultScheduleEvent(synoppsis, stime, etime));
+    	}
+    	
+    	return appointments;
+    }
+
+	public void doctorNameValueChangeMethod(ValueChangeEvent e) throws ClassNotFoundException, SQLException{
+	
+    	currentDoctorName = e.getNewValue().toString();
+    	setupDoctorModel();
+    }
+    
     public Date getRandomDate(Date base) {
         Calendar date = Calendar.getInstance();
         date.setTime(base);
@@ -191,4 +256,7 @@ public class ScheduleView implements Serializable {
     private void addMessage(FacesMessage message) {
         FacesContext.getCurrentInstance().addMessage(null, message);
     }
+
+
+	
 }
