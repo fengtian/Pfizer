@@ -6,6 +6,9 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -79,7 +82,7 @@ public class ScheduleView implements Serializable {
 	}
 
     
-    public void setupDoctorModel() throws ClassNotFoundException, SQLException{
+    public void setupDoctorModel() throws ClassNotFoundException, SQLException, ParseException{
         eventModel = new DefaultScheduleModel();
         ArrayList<DefaultScheduleEvent> appointments = getCurrentDoctorAppoint();
         for(DefaultScheduleEvent e : appointments){
@@ -88,7 +91,7 @@ public class ScheduleView implements Serializable {
 
     }
     
-    private ArrayList<DefaultScheduleEvent> getCurrentDoctorAppoint() throws ClassNotFoundException, SQLException {
+    private ArrayList<DefaultScheduleEvent> getCurrentDoctorAppoint() throws ClassNotFoundException, SQLException, ParseException {
     	ArrayList<DefaultScheduleEvent> appointments = new ArrayList<DefaultScheduleEvent>();
     	Class.forName("com.mysql.jdbc.Driver");
 		Connection con = DriverManager.getConnection("jdbc:mysql://localhost/Pfizer","root","");
@@ -98,19 +101,38 @@ public class ScheduleView implements Serializable {
     	pstmt.setString(1, currentDoctorName);
     	ResultSet rows = (ResultSet) pstmt.executeQuery();
 		String synoppsis = "";
-    	Date stime = null;
-    	Date etime = null;
+    	String stime = null;
+    	String etime = null;
     	while(rows.next()){
     		synoppsis = rows.getString(3);
-    		stime = rows.getDate(6);
-    		etime = rows.getDate(7);
-    		appointments.add(new DefaultScheduleEvent(synoppsis, stime, etime));
+    		stime = rows.getString(6);
+    		etime = rows.getString(7);
+    	    DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    		Date stimeDate = df.parse(stime);
+    		Date etimeDate = df.parse(etime);
+            eventModel.addEvent(new DefaultScheduleEvent(synoppsis, stimeDate, etimeDate));
     	}
     	
     	return appointments;
     }
+    
+   
+    
+    /*public Date getStringTime(String stringTime){
+        Calendar t = (Calendar) today().clone();
+        int hour = Integer.parseInt((String) stringTime.subSequence(12, 14));
+        
+        if(hour < 12){
+        	t.set(Calendar.AM_PM, Calendar.AM);
+        	t.set(Calendar.DATE, t.get(java.sql.Date.valueOf(stringTime.substring(0, 11))));
+        }
 
-	public void doctorNameValueChangeMethod(ValueChangeEvent e) throws ClassNotFoundException, SQLException{
+    }*/
+    
+    
+    
+
+	public void doctorNameValueChangeMethod(ValueChangeEvent e) throws ClassNotFoundException, SQLException, ParseException{
 	
     	currentDoctorName = e.getNewValue().toString();
     	setupDoctorModel();
