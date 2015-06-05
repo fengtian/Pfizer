@@ -9,7 +9,7 @@ import java.sql.SQLException;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
-@ManagedBean(name="User")
+@ManagedBean(name="user")
 @SessionScoped
 public class User {
 	private String username;

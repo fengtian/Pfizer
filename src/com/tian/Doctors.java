@@ -11,6 +11,7 @@ import javax.faces.event.ValueChangeEvent;
 public class Doctors {
 	private ArrayList<Doctor> doctors;
 	private String currentDoctorName;
+	private HashMap<Doctor, HashMap<String, String>> schedules;
 	
 	public String getCurrentDoctorName() {
 		return currentDoctorName;

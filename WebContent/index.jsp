@@ -12,9 +12,9 @@
 <f:view>
 Welcome to Pfizer online system<br>
 <h:form>
-Username  <h:inputText value="#{User.username}"></h:inputText><br>
-Password <h:inputSecret value="#{User.password}"></h:inputSecret><br>
-<h:commandButton value="Login" action ="#{User.login()}"></h:commandButton>
+Username  <h:inputText value="#{user.username}"></h:inputText><br>
+Password <h:inputSecret value="#{user.password}"></h:inputSecret><br>
+<h:commandButton value="Login" action ="#{user.login()}"></h:commandButton>
 </h:form>
 </f:view>
 </body>
