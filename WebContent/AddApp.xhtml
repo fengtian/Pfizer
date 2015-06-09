@@ -24,7 +24,7 @@
     <h:panelGrid columns="2" style="margin-bottom:10px" cellpadding="5">
         
  
-        <p:outputLabel for="doctor" value="Select a Doctor: " />
+        <p:outputLabel for="doctor" value="Select a doctor: " />
         <p:selectOneMenu id="doctor" value="#{selectTimeView.selectedDoctor}" onchange="submit()" valueChangeListener="#{selectTimeView.docNameValueChangeMethod}">
             <f:selectItem itemLabel="Select One" itemValue="" />
             <f:selectItems value="#{selectTimeView.doctors}" />
@@ -49,10 +49,14 @@
             </p:inputTextarea>
             
          <p:outputLabel for="patients" value="Select a patient: " />
-        <p:selectOneMenu id="patients" value="#{selectTimeView.selectedPatient}" >
+        <p:selectOneMenu id="patients" value="#{selectTimeView.selectedPatient}"  filter="true" filterMatchMode="contains">
             <f:selectItem itemLabel="Select One" itemValue="" />
             <f:selectItems value="#{selectTimeView.patients}" />
         </p:selectOneMenu>
+        
+        
+ 
+
             
         
     </h:panelGrid>

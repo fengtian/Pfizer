@@ -91,6 +91,7 @@ public class ScheduleView implements Serializable  {
     		stime = rows.getString(6);
     		etime = rows.getString(7);
     	    DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    	    
     		Date stimeDate = df.parse(stime);
     		Date etimeDate = df.parse(etime);
             eventModel.addEvent(new DefaultScheduleEvent(synoppsis, stimeDate, etimeDate));
