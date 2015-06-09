@@ -2,17 +2,28 @@ package com.tian;
 
 import java.util.*;
 
+import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.event.ValueChangeEvent;
 
-@ManagedBean(name="doctorsBean")
+@ManagedBean(name="doctorssBean")
 @SessionScoped
 public class Doctors {
 	private ArrayList<Doctor> doctors;
+	public ArrayList<Doctor> getDoctors() {
+		return doctors;
+	}
+
+	public void setDoctors(ArrayList<Doctor> doctors) {
+		this.doctors = doctors;
+	}
+
 	private String currentDoctorName;
-	private HashMap<Doctor, HashMap<String, String>> schedules;
 	
+		
+	
+
 	public String getCurrentDoctorName() {
 		return currentDoctorName;
 	}
@@ -32,10 +43,13 @@ public class Doctors {
 				}
 			}
 		return null;
-		
 	}
 
 	public void doctorNameValueChangeMethod(ValueChangeEvent e){
 		currentDoctorName = e.getNewValue().toString();
 	}
-}
+
+	
+	
+	
+	}
