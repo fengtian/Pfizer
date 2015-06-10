@@ -12,7 +12,7 @@
 <f:view>
 <h:form>
 <h:commandButton value="Appointment" action ="Appointment.xhtml"></h:commandButton><br>
-<h:commandButton value="Patient" action ="#{User.login()}"></h:commandButton><br>
+<h:commandButton value="Patient" action ="AddPatient"></h:commandButton><br>
 <h:commandButton value="Logout" action ="#{logoutBean.logout()}"></h:commandButton>
 
 </h:form>

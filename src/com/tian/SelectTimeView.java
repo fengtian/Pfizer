@@ -1,5 +1,6 @@
 package com.tian;
 
+import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -15,22 +16,25 @@ import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
+import javax.faces.bean.ViewScoped;
 import javax.faces.event.ValueChangeEvent;
 
 import org.primefaces.model.DefaultScheduleEvent;
 
 import com.mysql.jdbc.PreparedStatement;
 import com.mysql.jdbc.ResultSet;
+import com.mysql.jdbc.Statement;
  
  
 @ManagedBean
-public class SelectTimeView {
+@ViewScoped
+public class SelectTimeView implements Serializable {
      
     private String selectedDoctor;
 	private String selectedSlot;  
-	private String type;
-	private String synopsis;
-	private String selectedPatient;
+	private String type = "Company Medical";
+	private String synopsis = "";
+	private String selectedPatient = "Susan Jordan";
 	
 	
 	@ManagedProperty(value="#{doctorssBean}")
@@ -89,21 +93,43 @@ public class SelectTimeView {
    
 
 	@PostConstruct
-    public void init() {
+    public void init()  {
     	setUpDoctors();
     	
+    	try {
+			setUpPatient();
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     	
-    	//patients
-    	patients = new HashMap<String, String>();
-    	patients.put("Calvin", "Calvin");
-    	patients.put("Adam", "Adam");
     	
     }
+	
+	public void setUpDoctors(){
+		doctors = new LinkedHashMap();
+		doctors.put("Philip", "Philip");
+		doctors.put("Sarah", "Sarah");
+	}
  
-    private void setUpDoctors(){
-    	doctors = new HashMap<String, String>();
-    	doctors.put("Philip", "Philip");
-    	doctors.put("Sarah", "Sarah");
+    private void setUpPatient() throws ClassNotFoundException, SQLException{
+    	patients = new LinkedHashMap<String, String>();
+    	Class.forName("com.mysql.jdbc.Driver");
+		Connection con = DriverManager.getConnection("jdbc:mysql://localhost/Pfizer","root","");
+		Statement stmt = (Statement) con.createStatement();
+    	ResultSet rows = (ResultSet) stmt.executeQuery("select * from Patient");
+		String firstName = null;
+		String lastName = null;
+    	while(rows.next()){
+    		firstName = rows.getString("fname");
+    		lastName = rows.getString("sname");
+    		String name = firstName + " " + lastName;
+    		patients.put(name, name);
+			
+    	}
     }
     
   
@@ -111,7 +137,7 @@ public class SelectTimeView {
 
 	public void docNameValueChangeMethod(ValueChangeEvent e) throws ClassNotFoundException, SQLException, ParseException{
 	
-    	selectedDoctor = e.getNewValue().toString();
+    	selectedDoctor = (String) e.getNewValue();
     	Class.forName("com.mysql.jdbc.Driver");
 		Connection con = DriverManager.getConnection("jdbc:mysql://localhost/Pfizer","root","");
 		slots = new LinkedHashMap<String, String>();
@@ -122,17 +148,39 @@ public class SelectTimeView {
 		String stime = null;
     	while(rows.next()){
     		stime = rows.getString("stime");
-    		String stime1 = stime.substring(0, 21);
-			System.out.println(stime1);
+    		String stime1 = stime.substring(0, 19);
 
 			
-    		if(slots.get(stime) != null){
-    			System.out.println(slots.get(stime));
-    			slots.remove(stime);
+    		if(slots.get(stime1) != null){
+    			slots.remove(stime1);
     		}
     	}
     }
 	
+	public void slotValueChangeMethod(ValueChangeEvent e){
+		selectedSlot = e.getNewValue().toString();
+		
+	}
+	
+	public void typeValueChangeMethod(ValueChangeEvent e){
+		type = e.getNewValue().toString();
+		System.out.println(type);
+	}
+	
+	public void synopsisValueChangeMethod(ValueChangeEvent e){
+		synopsis = e.getNewValue().toString();
+		System.out.println(synopsis);
+	}
+	
+	public void patientValueChangeMethod(ValueChangeEvent e){
+		selectedPatient = e.getNewValue().toString();
+		System.out.println(selectedPatient);
+	}
+	
+	public void submitButtonListner() throws ClassNotFoundException, SQLException{
+		
+
+	}
 	private void fillSlots(int numOfWeeks) throws ParseException{
 		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 		Date date = new Date();

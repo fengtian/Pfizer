@@ -1,5 +1,6 @@
 package com.tian;
 
+import java.io.Serializable;
 import java.util.*;
 
 import javax.annotation.PostConstruct;
@@ -9,7 +10,7 @@ import javax.faces.event.ValueChangeEvent;
 
 @ManagedBean(name="doctorssBean")
 @SessionScoped
-public class Doctors {
+public class Doctors implements Serializable{
 	private ArrayList<Doctor> doctors;
 	public ArrayList<Doctor> getDoctors() {
 		return doctors;

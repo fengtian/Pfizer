@@ -16,7 +16,6 @@ import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
-import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.faces.event.ValueChangeEvent;
@@ -44,7 +43,24 @@ public class ScheduleView implements Serializable  {
     
     private String currentDoctorName;
     
-    
+    String stime;
+	public String getStime() {
+		return stime;
+	}
+
+	public void setStime(String stime) {
+		this.stime = stime;
+	}
+
+	public String getEtime() {
+		return etime;
+	}
+
+	public void setEtime(String etime) {
+		this.etime = etime;
+	}
+
+	String etime;
 
 
 	@PostConstruct
@@ -84,9 +100,10 @@ public class ScheduleView implements Serializable  {
     	pstmt.setString(1, currentDoctorName);
     	ResultSet rows = (ResultSet) pstmt.executeQuery();
 		String synoppsis = "";
-    	String stime = null;
-    	String etime = null;
+    	
     	while(rows.next()){
+    		Integer patientId = rows.getInt("patient");
+    		//String[] patientInfo = {patientId.toString(), rows.getString("type")};
     		synoppsis = rows.getString(3);
     		stime = rows.getString(6);
     		etime = rows.getString(7);
@@ -94,7 +111,7 @@ public class ScheduleView implements Serializable  {
     	    
     		Date stimeDate = df.parse(stime);
     		Date etimeDate = df.parse(etime);
-            eventModel.addEvent(new DefaultScheduleEvent(synoppsis, stimeDate, etimeDate));
+    		appointments.add(new DefaultScheduleEvent(synoppsis, stimeDate, etimeDate, patientId));
     	}
     	
     	return appointments;
@@ -237,6 +254,21 @@ public class ScheduleView implements Serializable  {
             eventModel.updateEvent(event);
          
         event = new DefaultScheduleEvent();
+    }
+    
+    public void deleteEvent(ActionEvent actionEvent) throws ClassNotFoundException, SQLException{
+    	Class.forName("com.mysql.jdbc.Driver");
+		Connection con = DriverManager.getConnection("jdbc:mysql://localhost/Pfizer","root","");
+    	//Statement stmt = con.createStatement();
+    	//ResultSet rows = (ResultSet) stmt.executeQuery("select * from Appointment, Doctor where Doctor.name = ? and Doctor.id = Appointment.doctor");
+    	PreparedStatement pstmt = (PreparedStatement) con.prepareStatement("DELETE FROM Appointment WHERE Appointment.patient = ?");//TO-DO: should be appointment id
+    	Integer patientId = (Integer) event.getData();
+    	pstmt.setString(1, patientId.toString());
+    	pstmt.executeUpdate();
+
+    	eventModel.deleteEvent(event);
+    	event = new DefaultScheduleEvent();
+    	
     }
      
     public void onEventSelect(SelectEvent selectEvent) {

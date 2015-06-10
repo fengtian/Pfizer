@@ -44,26 +44,38 @@
         
     </h:panelGrid>
  
-    <p:dialog widgetVar="eventDialog" header="Event Details" showEffect="clip" hideEffect="clip">
+    <p:dialog widgetVar="eventDialog" header="Appointment Details" showEffect="clip" hideEffect="clip">
         <h:panelGrid id="eventDetails" columns="2">
-            <h:outputLabel for="title" value="Title:" />
-            <p:inputText id="title" value="#{scheduleViewss.event.title}" required="true" />
+        
+        	<h:outputLabel for="patient" value="Patient Id:" />
+            <h:outputText id="patient" value="#{scheduleViewss.event.data}" required="true" />
+            
+            <!--  <h:outputLabel for="title" value="Title:" />
+            <p:inputText id="title" value="#{scheduleViewss.event.title}" required="true" />-->
  
-            <h:outputLabel for="from" value="From:" />
-            <p:inputMask id="from" value="#{scheduleViewss.event.startDate}" mask="99/99/9999">
-                <f:convertDateTime pattern="dd/MM/yyyy" timeZone="GMT+2"/>
-            </p:inputMask>
+           <!-- <h:outputLabel for="from" value="From:" />
+            <p:inputMask id="from" value="#{scheduleViewss.event.startDate}" mask="9999/99/99" >
+                <f:convertDateTime pattern="yyyy/MM/DD HH/MM/SS" />
+            </p:inputMask> -->
+            <h:outputLabel for="from2" value="From:" />
+            <h:outputText id="from2" value="#{scheduleViewss.event.startDate}" >
+            </h:outputText>
+            
+            <br></br>
+            <h:outputLabel for="to2" value="To:" />
+            <h:outputText id="to2" value="#{scheduleViewss.event.endDate}" >
+            </h:outputText>
  
-            <h:outputLabel for="to" value="To:" />
+            <!-- <h:outputLabel for="to" value="To:" />
             <p:inputMask id="to" value="#{scheduleViews.event.endDate}" mask="99/99/9999">
                 <f:convertDateTime pattern="dd/MM/yyyy" timeZone="GMT+2"/>
-            </p:inputMask>
+            </p:inputMask> -->
  
-            <h:outputLabel for="allDay" value="All Day:" />
-            <h:selectBooleanCheckbox id="allDay" value="#{scheduleViews.event.allDay}" />
+           <!--  <h:outputLabel for="allDay" value="All Day:" />
+            <h:selectBooleanCheckbox id="allDay" value="#{scheduleViews.event.allDay}" /> -->
  
-            <p:commandButton type="reset" value="Reset" />
-            <p:commandButton id="addButton" value="Save" actionListener="#{scheduleViews.addEvent}" oncomplete="PF('myschedule').update();PF('eventDialog').hide();" />
+            <!-- <p:commandButton type="reset" value="Reset" />  -->   
+            <p:commandButton id="deleteButton" value="Delete" actionListener="#{scheduleViewss.deleteEvent}" oncomplete="PF('myschedule').update();PF('eventDialog').hide();" />
         </h:panelGrid>
     </p:dialog>    
 </h:form>
