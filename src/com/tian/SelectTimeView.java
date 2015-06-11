@@ -35,7 +35,8 @@ public class SelectTimeView implements Serializable {
 	private String type = "Company Medical";
 	private String synopsis = "";
 	private String selectedPatient = "Susan Jordan";
-	
+	private HashMap<String, Integer> doctorNameIdMap = new HashMap();
+	private Integer selectedPatientId;
 	
 	@ManagedProperty(value="#{doctorssBean}")
     private Doctors injectedDoctors;
@@ -113,6 +114,10 @@ public class SelectTimeView implements Serializable {
 		doctors = new LinkedHashMap();
 		doctors.put("Philip", "Philip");
 		doctors.put("Sarah", "Sarah");
+		doctorNameIdMap = new HashMap();
+		
+		doctorNameIdMap.put("Philip", 1);
+		doctorNameIdMap.put("Sarah", 2);
 	}
  
     private void setUpPatient() throws ClassNotFoundException, SQLException{
@@ -126,6 +131,7 @@ public class SelectTimeView implements Serializable {
     	while(rows.next()){
     		firstName = rows.getString("fname");
     		lastName = rows.getString("sname");
+    		selectedPatientId = rows.getInt("id");
     		String name = firstName + " " + lastName;
     		patients.put(name, name);
 			
@@ -177,10 +183,64 @@ public class SelectTimeView implements Serializable {
 		System.out.println(selectedPatient);
 	}
 	
-	public void submitButtonListner() throws ClassNotFoundException, SQLException{
-		
+	public void refreshAvailableSlots() throws ClassNotFoundException, SQLException, ParseException{
+		Class.forName("com.mysql.jdbc.Driver");
+		Connection con = DriverManager.getConnection("jdbc:mysql://localhost/Pfizer","root","");
+		slots = new LinkedHashMap<String, String>();
+    	fillSlots(2);
+    	PreparedStatement pstmt = (PreparedStatement) con.prepareStatement("select stime from Appointment, Doctor where Doctor.name = ? and Doctor.id = Appointment.doctor");
+    	pstmt.setString(1, selectedDoctor);
+    	ResultSet rows = (ResultSet) pstmt.executeQuery();
+		String stime = null;
+    	while(rows.next()){
+    		stime = rows.getString("stime");
+    		String stime1 = stime.substring(0, 19);
+
+			
+    		if(slots.get(stime1) != null){
+    			slots.remove(stime1);
+    		}
+    	}
+	}
+	
+	public void submitButtonListner() throws ClassNotFoundException, SQLException, ParseException{
+    	refreshAvailableSlots();
+
+		Class.forName("com.mysql.jdbc.Driver");
+		Connection con = DriverManager.getConnection("jdbc:mysql://localhost/Pfizer","root","");
+		Integer docId = doctorNameIdMap.get(selectedDoctor);
+		String endTime = computeSlotEndTime(selectedSlot);
+    	PreparedStatement pstmt = (PreparedStatement) con.prepareStatement("INSERT INTO Appointment (type, synopsis, patient, doctor, stime, etime) VALUES (?, ?, ?, ?, ?, ?);");
+    	pstmt.setString(1, type);
+    	pstmt.setString(2, synopsis);
+    	pstmt.setInt(3, selectedPatientId);
+    	pstmt.setInt(4, docId);
+    	pstmt.setString(5, selectedSlot);
+    	pstmt.setString(6, endTime);
+    	pstmt.executeUpdate();
 
 	}
+	
+	private String computeSlotEndTime(String startTime){
+		System.out.println(startTime);
+		char[] startTimeArray = startTime.toCharArray();
+		System.out.println(startTimeArray[12]);
+		if((startTimeArray[12] - '0' )== 9){
+			startTimeArray[12] = '0';
+			startTimeArray[11] = '1';
+		}else{
+			int temp = Character.getNumericValue(startTimeArray[12])+ 1;
+			//startTimeArray[12] =  (char) ((Character.getNumericValue(startTimeArray[12]))+ 1);
+			System.out.println(temp);
+			startTimeArray[12] = Character.forDigit(temp, 10);
+		}
+		String result = new String(startTimeArray);
+		System.out.println(result);
+		return result;
+	}
+	
+	
+	
 	private void fillSlots(int numOfWeeks) throws ParseException{
 		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 		Date date = new Date();
