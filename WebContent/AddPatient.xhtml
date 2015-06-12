@@ -12,7 +12,39 @@
     <h:body>
     <h:form>
     <h:commandButton action="AddApp" value="Back"></h:commandButton><br></br>
+    
+    <h:outputLabel for="firstname" value="First Name: " style="font-weight:bold"/>                    
+            <p:inputText id="firstname" value="#{p.fname}" required="true" label="Name" valueChangeListener="#{p.fnameValueChangeMethod}"/>
+            
     <br></br>
+    <br></br>
+    
+            
+    <h:outputLabel for="sname" value="Last Name: " style="font-weight:bold"/>                    
+            <p:inputText id="sname" value="#{p.lname}" required="true" label="Name" valueChangeListener="#{p.lnameValueChangeMethod}"/>
+            
+    <br></br> 
+    <br></br>
+    
+    <h:outputLabel for="history" value="Medical History: " style="font-weight:bold"/>
+            <p:inputTextarea id="history" value="#{p.history}" required="true" label="Description"  valueChangeListener="#{p.historyValueChangeMethod}">
+            </p:inputTextarea>
+    
+    <br></br>
+    <br></br>
+
+            
+        <p:outputLabel for="dob" value="Date of Birth: " />
+	<p:calendar id="dob" value="#{p.dob}">
+            <p:ajax event="dateSelect" listener="#{p.onDateSelect}"  />
+        </p:calendar>        
+	<br></br> 
+    <br></br>        
+    
+    <br></br>
+    
+    <p:commandButton value="Submit" actionListener="#{p.submitButtonListner}" />	
+    
     </h:form>
     </h:body>
     </html>
