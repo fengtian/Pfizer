@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html xmlns="http://www.w3.org/1999/xhtml"  
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:p="http://primefaces.org/ui"
@@ -7,6 +8,8 @@
       
 	<h:head>
         <title>New Appointment</title>
+        <meta charset="utf-8"></meta>
+  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css"></link>
     </h:head>
     
     <h:body>
@@ -33,13 +36,13 @@
         </p:selectOneMenu>
  
         <p:outputLabel for="slots" value="Select one slot: " />
-        <p:selectOneMenu id="slots" value="#{selectTimeView.selectedSlot}" onchange="submit()" valueChangeListener="#{selectTimeView.slotValueChangeMethod}">
+        <p:selectOneMenu id="slots" value="#{selectTimeView.selectedSlot}"  valueChangeListener="#{selectTimeView.slotValueChangeMethod}">
             <f:selectItem itemLabel="Select One" itemValue="" />
             <f:selectItems value="#{selectTimeView.slots}" />
         </p:selectOneMenu>
         
         <p:outputLabel for="type" value="Select appointment type: " />
-        <p:selectOneMenu id="type" value="#{selectTimeView.type}"  onchange="submit()" valueChangeListener="#{selectTimeView.typeValueChangeMethod}">
+        <p:selectOneMenu id="type" value="#{selectTimeView.type}"   valueChangeListener="#{selectTimeView.typeValueChangeMethod}">
             <f:selectItem itemLabel="Select One" itemValue="" />
             <f:selectItem itemLabel="Company Medical" itemValue="Company Medical" />
             <f:selectItem itemLabel="Insurance Medical" itemValue="Insurance Medical" />
@@ -47,11 +50,11 @@
         </p:selectOneMenu>
         
         <h:outputLabel for="syn" value="Synopsis" style="font-weight:bold"/>
-            <p:inputTextarea id="syn" value="#{selectTimeView.synopsis}" onchange="submit()" valueChangeListener="#{selectTimeView.synopsisValueChangeMethod}">
+            <p:inputTextarea id="syn" value="#{selectTimeView.synopsis}"  valueChangeListener="#{selectTimeView.synopsisValueChangeMethod}">
             </p:inputTextarea>
             
          <p:outputLabel for="patients" value="Select a patient: " />
-        <p:selectOneMenu id="patients" value="#{selectTimeView.selectedPatient}"  filter="true" filterMatchMode="contains" onchange="submit()" valueChangeListener="#{selectTimeView.patientValueChangeMethod}">
+        <p:selectOneMenu id="patients" value="#{selectTimeView.selectedPatient}"  filter="true" filterMatchMode="contains"  valueChangeListener="#{selectTimeView.patientValueChangeMethod}">
             <f:selectItem itemLabel="Select One" itemValue="" />
             <f:selectItems value="#{selectTimeView.patients}" />
         </p:selectOneMenu>

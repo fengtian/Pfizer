@@ -7,13 +7,73 @@
       
 	<h:head>
         <title>Patients</title>
+        <meta charset="utf-8"></meta>
+  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css"></link>
     </h:head>
     
     <h:body>
-    <form>
-    <h:commandButton action="AddPatient" value="Add a new Patient"></h:commandButton><br></br>
+    <h:form>      
+    <p:panel id="panel" header="Search a Patient" style="margin-bottom:10px;">
+        <p:messages id="messages" />
+ 
+        <h:panelGrid columns="2" cellpadding="5">
+            <h:outputLabel for="search" value="Search: " />
+            <p:inputText id="search" value="#{s.input}" required="true" label="search"  valueChangeListener="#{s.inputValueChangeMethod}">
+            </p:inputText>
+ 
+            <h:outputLabel for="option" value="Search by: " />
+            <h:selectOneMenu id="option" value="#{s.selectedOption}" required="true" label="option" valueChangeListener="#{s.optionValueChangeMethod}">
+                <f:selectItem itemLabel="Select One" itemValue="" noSelectionOption="true" />
+                <f:selectItem itemLabel="By last name" itemValue="lname" />
+                <f:selectItem itemLabel="By patient id" itemValue="id" />
+            </h:selectOneMenu>
+            <p:message for="@previous" />
+        </h:panelGrid>
+    </p:panel>
+        <p:commandButton value="Search" onchange="submit()" valueChangeListener="#{s.searchButtonListener}" />	
     
-    </form>
+
+    	<br></br> 
+    <br></br>
+    
+    
+    
+    <p:dataList value="#{s.patients}" var="patient" type="ordered" itemType="none" paginator="true" rows="10" styleClass="paginated">
+        <f:facet name="header">
+            Patient List
+        </f:facet>
+        <p:commandLink update=":form:patientDetail" oncomplete="PF('patientDialog').show()" title="View Detail" styleClass="ui-icon ui-icon-search" style="float:left;margin-right:10px">
+            <f:setPropertyActionListener value="#{patient}" target="#{s.searchedPatient}" />
+            <h:outputText value="#{patient.id}, #{patient.fname}, #{patient.lname}"/>
+        </p:commandLink>
+        <h:outputText value="#{patient.id}, #{patient.fname}, #{patient.lname} " style="display:inline-block"/>
+    </p:dataList>
+ 
+    <p:dialog header="Patient Detail" widgetVar="patientDialog" modal="true" showEffect="blind" resizable="false">
+        <p:outputPanel id="patientDetail" style="text-align:center;">
+            <p:panelGrid  columns="2" rendered="#{not empty s.searchedPatient}" columnClasses="label,value">
+                 
+                <h:outputText value="Id:" />
+                <h:outputText value="#{s.searchedPatient.id}" />
+ 
+                <h:outputText value="First Name:" />
+                <h:outputText value="#{s.searchedPatient.fname}" />
+ 
+                <h:outputText value="Last Name:" />
+                <h:outputText value="#{s.searchedPatient.lname}" />
+ 
+                <h:outputText value="Date of Birth" />
+                <h:outputText value="#{s.searchedPatient.dob}" />
+                
+                
+            </p:panelGrid>
+        </p:outputPanel>
+    </p:dialog>
+        <br></br>
+        <h:commandButton action="AddPatient" value="Add a new Patient"></h:commandButton><br></br>
+    
+    </h:form>
+    
     </h:body>
     </html>
     

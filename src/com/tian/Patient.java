@@ -24,6 +24,14 @@ import com.mysql.jdbc.PreparedStatement;
 @ManagedBean(name="p")
 @ViewScoped
 public class Patient implements Serializable{
+	private Integer id;
+	public Integer getId() {
+		return id;
+	}
+	public void setId(Integer id){
+		this.id = id;
+	}
+
 	private String fname;
 	private String lname;
 	private String dob;
