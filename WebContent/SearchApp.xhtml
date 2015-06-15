@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+       <html xmlns="http://www.w3.org/1999/xhtml"
+             xmlns:h="http://java.sun.com/jsf/html"
+             xmlns:f="http://java.sun.com/jsf/core"
+             xmlns:ui="http://java.sun.com/jsf/facelets"
+             xmlns:p="http://primefaces.org/ui">
+               <h:head>
+                   <title>Appointment Record</title>
+               </h:head>
+               <h:body>
+                   <h:form>
+                    <p:commandButton value="Get Appointment" actionListener="#{pc.searchApp}" update="appTbl"/>
+                    <p:dataTable id="appTbl" value="#{pc.apps}" var="app">
+    				<p:column headerText="Appointment starting time">
+    					#{app.stime}
+    				</p:column>
+    	
+    				<p:column headerText="Doctor ID">
+    					#{app.doctorId} 
+    				</p:column>
+    	
+    				<p:column headerText="Select">
+    	
+    					<p:commandButton icon="ui-icon-search" actionListener="#{pc.selectedApp(app)}">
+    					</p:commandButton> 
+    				</p:column>
+    	
+    	
+    	
+    
+    			</p:dataTable>
+￼￼             </h:form>
+        </h:body>
+</html>

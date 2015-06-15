@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"  
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      >
+      
+	<h:head>
+        <title>Patients</title>
+        <meta charset="utf-8"></meta>
+  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css"></link>
+    </h:head>
+    
+    <h:body>
+    <h:form>   
+    	
+    <p:inputText value="#{pc.input}"/>
+    <h:outputLabel for="option" value="Search by: " />
+            <h:selectOneMenu id="option" value="#{pc.selectedOption}" required="true" label="option" valueChangeListener="#{pc.optionValueChangeMethod}">
+                <f:selectItem itemLabel="Select One" itemValue="" noSelectionOption="true" />
+                <f:selectItem itemLabel="By last name" itemValue="lname" />
+                <f:selectItem itemLabel="By patient id" itemValue="id" />
+           </h:selectOneMenu>
+    
+    
+    <p:commandButton value="Search" actionListener="#{pc.searchBy}" update="patientsTbl">
+    	
+    </p:commandButton>       
+      
+    <p:dataTable id="patientsTbl" value="#{pc.patients}" var="varP">
+    	<p:column headerText="ID">
+    		#{varP.id}
+    	</p:column>
+    	
+    	<p:column headerText="First Name">
+    		#{varP.fname} #{varP.lname}
+    	</p:column>
+    	
+    	<p:column headerText="Detail">
+    		<p:commandButton icon="ui-icon-search" actionListener="#{pc.selectedDetail(varP)}">
+    		</p:commandButton>
+    	</p:column>
+    	
+    	
+    	
+    
+    </p:dataTable>
+    </h:form>
+    </h:body>
+    </html>

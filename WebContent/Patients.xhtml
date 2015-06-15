@@ -2,6 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml"  
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:f="http://java.sun.com/jsf/core"
       >
       
@@ -12,68 +13,55 @@
     </h:head>
     
     <h:body>
-    <h:form>      
-    <p:panel id="panel" header="Search a Patient" style="margin-bottom:10px;">
-        <p:messages id="messages" />
- 
-        <h:panelGrid columns="2" cellpadding="5">
-            <h:outputLabel for="search" value="Search: " />
-            <p:inputText id="search" value="#{s.input}" required="true" label="search"  valueChangeListener="#{s.inputValueChangeMethod}">
-            </p:inputText>
- 
-            <h:outputLabel for="option" value="Search by: " />
-            <h:selectOneMenu id="option" value="#{s.selectedOption}" required="true" label="option" valueChangeListener="#{s.optionValueChangeMethod}">
-                <f:selectItem itemLabel="Select One" itemValue="" noSelectionOption="true" />
-                <f:selectItem itemLabel="By last name" itemValue="lname" />
-                <f:selectItem itemLabel="By patient id" itemValue="id" />
-            </h:selectOneMenu>
-            <p:message for="@previous" />
-        </h:panelGrid>
-    </p:panel>
-        <p:commandButton value="Search" onchange="submit()" valueChangeListener="#{s.searchButtonListener}" />	
+    <h:form id="form1">   
+    <p:commandButton value="Search Patients" actionListener="#{pc.searchPatientsForm}">
+    	<p:ajax event="dialogReturn" listener="#{pc.handleSelectedPatient}" update="PatientDetails">
+    	</p:ajax>
+    </p:commandButton>
     
-
-    	<br></br> 
+    <br></br>
     <br></br>
     
+    <h:panelGrid id="PatientDetails" columns="2">
+    	<h:outputLabel value="ID: "></h:outputLabel>
+    	<h:outputText value="#{pc.selectedPatient.id}"></h:outputText>
+    	
+    	<h:outputLabel value="First Name: "></h:outputLabel>
+    	<h:outputText value="#{pc.selectedPatient.fname}"></h:outputText>
+    	
+    	<h:outputLabel value="Last Name: "></h:outputLabel>
+    	<h:outputText value="#{pc.selectedPatient.lname}"></h:outputText>
+    	
+    	<h:outputLabel value="Date of Birth: "></h:outputLabel>
+    	<h:outputText value="#{pc.selectedPatient.dob}"></h:outputText>
+    	
+    	<h:outputLabel value="History: "></h:outputLabel>
+    	<p:link  value="Medical History" outcome="History"></p:link>
+    	
+    	
+       
     
+    <br></br>
+    <br></br> 
+    </h:panelGrid>
+    <p:link  value="Add New Patient" outcome="AddPatient"></p:link>
+    <br></br>
+    <br></br> 
+   	<p:commandButton value="Delete this patient" actionListener="#{pc.delete}" update="form1"></p:commandButton>
+    <br></br>
+    <br></br>
     
-    <p:dataList value="#{s.patients}" var="patient" type="ordered" itemType="none" paginator="true" rows="10" styleClass="paginated">
-        <f:facet name="header">
-            Patient List
-        </f:facet>
-        <p:commandLink update=":form:patientDetail" oncomplete="PF('patientDialog').show()" title="View Detail" styleClass="ui-icon ui-icon-search" style="float:left;margin-right:10px">
-            <f:setPropertyActionListener value="#{patient}" target="#{s.searchedPatient}" />
-            <h:outputText value="#{patient.id}, #{patient.fname}, #{patient.lname}"/>
-        </p:commandLink>
-        <h:outputText value="#{patient.id}, #{patient.fname}, #{patient.lname} " style="display:inline-block"/>
-    </p:dataList>
- 
-    <p:dialog header="Patient Detail" widgetVar="patientDialog" modal="true" showEffect="blind" resizable="false">
-        <p:outputPanel id="patientDetail" style="text-align:center;">
-            <p:panelGrid  columns="2" rendered="#{not empty s.searchedPatient}" columnClasses="label,value">
-                 
-                <h:outputText value="Id:" />
-                <h:outputText value="#{s.searchedPatient.id}" />
- 
-                <h:outputText value="First Name:" />
-                <h:outputText value="#{s.searchedPatient.fname}" />
- 
-                <h:outputText value="Last Name:" />
-                <h:outputText value="#{s.searchedPatient.lname}" />
- 
-                <h:outputText value="Date of Birth" />
-                <h:outputText value="#{s.searchedPatient.dob}" />
-                
-                
-            </p:panelGrid>
-        </p:outputPanel>
-    </p:dialog>
-        <br></br>
-        <h:commandButton action="AddPatient" value="Add a new Patient"></h:commandButton><br></br>
-    
+    <p:commandButton value="Search this Patient's Appointment" actionListener="#{pc.searchAppForm}" >	
+    <p:ajax event="dialogReturn" 
+         listener="#{pc.handleSeletedApp}"/>
+    </p:commandButton>       
+     <br></br>
+    <br></br>
+    <p:link value="Show selected appointment report" outcome="AppDetail"></p:link>
+     <br></br>
+    <br></br>
+    <br></br>
     </h:form>
-    
     </h:body>
     </html>
     

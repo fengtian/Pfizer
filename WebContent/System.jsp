@@ -13,6 +13,7 @@
 <h:form>
 <h:commandButton value="Appointment" action ="Appointment.xhtml"></h:commandButton><br>
 <h:commandButton value="Patient" action ="Patients.xhtml"></h:commandButton><br>
+
 <h:commandButton value="Logout" action ="#{logoutBean.logout()}"></h:commandButton>
 
 </h:form>
