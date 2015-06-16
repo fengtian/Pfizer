@@ -47,7 +47,13 @@
     
     <br></br>
     <br></br> 
-    </h:panelGrid>   
+    </h:panelGrid> 
+    
+    <h:commandLink title="Export">
+     
+     <p:dataExporter target="myTable" type="pdf" fileName="name" 
+         preProcessor="#{pc.preProcessPDF}"/>
+ </h:commandLink>  
     </h:form>
     </h:body>
     </html>

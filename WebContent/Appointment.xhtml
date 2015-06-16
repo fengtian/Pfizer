@@ -12,6 +12,8 @@
     </h:head>
     <h:body>
     <h:form>
+    <h:commandButton value="Back" action="System.jsp"></h:commandButton>
+    
     Please select the doctor:
     <h:selectOneMenu value="#{scheduleViewss.currentDoctorName}" onchange="submit()"
 	valueChangeListener="#{scheduleViewss.doctorNameValueChangeMethod}" >
@@ -34,7 +36,7 @@
 	
 	
         
-        <p:schedule id="schedule" value="#{scheduleViewss.eventModel}" widgetVar="myschedule" timeZone="GMT+2">
+        <p:schedule id="schedule" value="#{scheduleViewss.eventModel}" widgetVar="myschedule" timeZone="GMT-4">
  
             <p:ajax event="dateSelect" listener="#{scheduleViewss.onDateSelect}" update="eventDetails" oncomplete="PF('eventDialog').show();" />
             <p:ajax event="eventSelect" listener="#{scheduleViewss.onEventSelect}" update="eventDetails" oncomplete="PF('eventDialog').show();" />

@@ -17,6 +17,7 @@ import javax.faces.event.ValueChangeEvent;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.model.DefaultScheduleEvent;
+import org.w3c.dom.Document;
 
 import com.mysql.jdbc.PreparedStatement;
 import com.mysql.jdbc.ResultSet;
@@ -88,8 +89,9 @@ public class PatientController implements Serializable {
     	Class.forName("com.mysql.jdbc.Driver");
 		Connection con = DriverManager.getConnection("jdbc:mysql://localhost/Pfizer","root","");
 		PreparedStatement pstmt = (PreparedStatement) con.prepareStatement("select * from Appointment where Appointment.patient = ?");
-	    pstmt.setString(1, selectedPatient.getId().toString());
-		
+	    //pstmt.setString(1, selectedPatient.getId().toString());
+    	pstmt.setInt(1, selectedPatient.getId());
+
     	ResultSet rows = (ResultSet) pstmt.executeQuery();
     	while(rows.next()){
     		
@@ -223,5 +225,7 @@ public class PatientController implements Serializable {
 	public void handleSeletedApp(SelectEvent event){
 		this.selectedApp = (Appointment) event.getObject();
 	}
+	
+	
 
 }

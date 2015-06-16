@@ -14,6 +14,8 @@
     
     <h:body>
     <h:form>
+        <h:commandButton value="Back" action="Appointment"></h:commandButton>
+    
     <h:commandButton value="Refresh" actionListener="#{selectTimeView.refreshAvailableSlots}"></h:commandButton>
     
     <br></br>
@@ -53,7 +55,7 @@
             </p:inputTextarea>
             
          <p:outputLabel for="patients" value="Select a patient: " />
-        <p:selectOneMenu id="patients" value="#{selectTimeView.selectedPatient}"  filter="true" filterMatchMode="contains"  valueChangeListener="#{selectTimeView.patientValueChangeMethod}">
+        <p:selectOneMenu id="patients" value="#{selectTimeView.selectedPatient}"  filter="true" filterMatchMode="contains"  onchange="submit()" valueChangeListener="#{selectTimeView.patientValueChangeMethod}">
             <f:selectItem itemLabel="Select One" itemValue="" />
             <f:selectItems value="#{selectTimeView.patients}" />
         </p:selectOneMenu>

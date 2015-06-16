@@ -10,7 +10,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
@@ -19,7 +18,6 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.event.ValueChangeEvent;
 
-import org.primefaces.model.DefaultScheduleEvent;
 
 import com.mysql.jdbc.PreparedStatement;
 import com.mysql.jdbc.ResultSet;
@@ -32,11 +30,12 @@ public class SelectTimeView implements Serializable {
      
     private String selectedDoctor;
 	private String selectedSlot;  
-	private String type = "Company Medical";
+	private String type = "";
 	private String synopsis = "";
-	private String selectedPatient = "Susan Jordan";
-	private HashMap<String, Integer> doctorNameIdMap = new HashMap();
+	private String selectedPatient = "";
+	private HashMap<String, Integer> doctorNameIdMap = new HashMap<String, Integer>();
 	private Integer selectedPatientId;
+	private HashMap<String, Integer> idMap = new HashMap<String, Integer>();
 	
 	@ManagedProperty(value="#{doctorssBean}")
     private Doctors injectedDoctors;
@@ -131,9 +130,10 @@ public class SelectTimeView implements Serializable {
     	while(rows.next()){
     		firstName = rows.getString("fname");
     		lastName = rows.getString("sname");
-    		selectedPatientId = rows.getInt("id");
-    		String name = firstName + " " + lastName;
+    		selectedPatientId = rows.getInt("id");    		
+    		String name = firstName + " " + lastName;   		
     		patients.put(name, name);
+    		idMap.put(name, selectedPatientId);
 			
     	}
     }
@@ -213,6 +213,7 @@ public class SelectTimeView implements Serializable {
     	PreparedStatement pstmt = (PreparedStatement) con.prepareStatement("INSERT INTO Appointment (type, synopsis, patient, doctor, stime, etime) VALUES (?, ?, ?, ?, ?, ?);");
     	pstmt.setString(1, type);
     	pstmt.setString(2, synopsis);
+    	findPatientId(selectedPatient);
     	pstmt.setInt(3, selectedPatientId);
     	pstmt.setInt(4, docId);
     	pstmt.setString(5, selectedSlot);
@@ -221,6 +222,10 @@ public class SelectTimeView implements Serializable {
 
 	}
 	
+	private void findPatientId(String selectedPatient) {
+		selectedPatientId = idMap.get(selectedPatient);
+	}
+
 	private String computeSlotEndTime(String startTime){
 		System.out.println(startTime);
 		char[] startTimeArray = startTime.toCharArray();
