@@ -28,11 +28,11 @@ import com.mysql.jdbc.Statement;
 @ViewScoped
 public class SelectTimeView implements Serializable {
      
-    private String selectedDoctor;
+    private String selectedDoctor = "Philip";
 	private String selectedSlot;  
-	private String type = "";
+	private String type = "Company Medical";
 	private String synopsis = "";
-	private String selectedPatient = "";
+	private String selectedPatient = "Mine Yao";
 	private HashMap<String, Integer> doctorNameIdMap = new HashMap<String, Integer>();
 	private Integer selectedPatientId;
 	private HashMap<String, Integer> idMap = new HashMap<String, Integer>();
@@ -148,6 +148,7 @@ public class SelectTimeView implements Serializable {
 		Connection con = DriverManager.getConnection("jdbc:mysql://localhost/Pfizer","root","");
 		slots = new LinkedHashMap<String, String>();
     	fillSlots(2);
+    	selectedSlot = slots.keySet().iterator().next();
     	PreparedStatement pstmt = (PreparedStatement) con.prepareStatement("select stime from Appointment, Doctor where Doctor.name = ? and Doctor.id = Appointment.doctor");
     	pstmt.setString(1, selectedDoctor);
     	ResultSet rows = (ResultSet) pstmt.executeQuery();
@@ -170,17 +171,14 @@ public class SelectTimeView implements Serializable {
 	
 	public void typeValueChangeMethod(ValueChangeEvent e){
 		type = e.getNewValue().toString();
-		System.out.println(type);
 	}
 	
 	public void synopsisValueChangeMethod(ValueChangeEvent e){
 		synopsis = e.getNewValue().toString();
-		System.out.println(synopsis);
 	}
 	
 	public void patientValueChangeMethod(ValueChangeEvent e){
 		selectedPatient = e.getNewValue().toString();
-		System.out.println(selectedPatient);
 	}
 	
 	public void refreshAvailableSlots() throws ClassNotFoundException, SQLException, ParseException{

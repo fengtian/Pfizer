@@ -4,7 +4,11 @@ import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -32,6 +36,54 @@ public class PatientController implements Serializable {
 	private List<Appointment> apps;
 	private Appointment selectedApp;
 	private String appInput;
+	private boolean editmode;
+	
+	public void edit() {
+	    editmode = true;
+	}
+
+	public void save() {
+		try {
+			saveNewValue();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+	    editmode = false;
+	}
+	
+	public void cancel(){
+		editmode = false;
+	}
+
+	private void saveNewValue() throws ClassNotFoundException, SQLException, ParseException {
+		Class.forName("com.mysql.jdbc.Driver");
+		Connection con = DriverManager.getConnection("jdbc:mysql://localhost/Pfizer","root","");
+	
+    	PreparedStatement pstmt = (PreparedStatement) con.prepareStatement("UPDATE Patient SET fname=?, sname=?, birthdate=? WHERE Patient.id=?;");
+    	pstmt.setString(1, selectedPatient.getFname());
+    	pstmt.setString(2, selectedPatient.getLname());
+    	DateFormat formatter = new SimpleDateFormat("yyyyMMdd");
+		Date myDate = formatter.parse(selectedPatient.getDob());
+		java.sql.Date sqlDate = new java.sql.Date(myDate.getTime());    	
+		pstmt.setDate(3, sqlDate);
+    	//pstmt.setString(4, history);
+    	pstmt.setInt(4, selectedPatient.getId());
+    	pstmt.executeUpdate();
+
+		
+	}
+
+	public boolean isEditmode() {
+		return editmode;
+	}
+
+	public void setEditmode(boolean editmode) {
+		this.editmode = editmode;
+	}
 
 	public String getAppInput() {
 		return appInput;

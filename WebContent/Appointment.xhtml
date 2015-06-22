@@ -8,7 +8,8 @@
 	<h:head>
         <title>Appointment</title>
         <meta charset="utf-8"></meta>
-  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css"></link>
+<link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script>
     </h:head>
     <h:body>
     <h:form>
@@ -49,7 +50,7 @@
     </h:panelGrid>
  
     <p:dialog widgetVar="eventDialog" header="Appointment Details" showEffect="clip" hideEffect="clip">
-        <h:panelGrid id="eventDetails" columns="2">
+        <h:panelGrid id="eventDetails" columns="1">
         
         	<h:outputLabel for="patient" value="Patient Id:" />
             <h:outputText id="patient" value="#{scheduleViewss.event.data}" required="true" />
