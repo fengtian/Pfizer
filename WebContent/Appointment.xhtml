@@ -17,7 +17,7 @@
     
     Please select the doctor:
     <h:selectOneMenu value="#{scheduleViewss.currentDoctorName}" onchange="submit()"
-	valueChangeListener="#{scheduleViewss.doctorNameValueChangeMethod}" >
+	valueChangeListener="#{scheduleViewss.doctorNameValueChangeMethod}" update="calendar">
 	
    		<f:selectItem itemValue="Philip" itemLabel="Philip" />
    		<f:selectItem itemValue="Sarah" itemLabel="Sarah" />	   							
@@ -30,7 +30,7 @@
 <h:form>
     <p:growl id="messages" showDetail="true" />
  
-    <h:panelGrid columnClasses="value">
+    <h:panelGrid columnClasses="value" autoUpdate="true">
         <h3 style="margin-top: 0"> </h3>
         Selected Schedule:
 	<h:outputText value="#{scheduleViewss.currentDoctorName}"></h:outputText><br></br>
@@ -54,6 +54,7 @@
         
         	<h:outputLabel for="patient" value="Patient Id:" />
             <h:outputText id="patient" value="#{scheduleViewss.event.data}" required="true" />
+                        <br></br>
             
             <!--  <h:outputLabel for="title" value="Title:" />
             <p:inputText id="title" value="#{scheduleViewss.event.title}" required="true" />-->
@@ -79,7 +80,9 @@
            <!--  <h:outputLabel for="allDay" value="All Day:" />
             <h:selectBooleanCheckbox id="allDay" value="#{scheduleViews.event.allDay}" /> -->
  
-            <!-- <p:commandButton type="reset" value="Reset" />  -->   
+            <!-- <p:commandButton type="reset" value="Reset" />  --> 
+                        <br></br>
+              
             <p:commandButton id="deleteButton" value="Delete" actionListener="#{scheduleViewss.deleteEvent}" oncomplete="PF('myschedule').update();PF('eventDialog').hide();" />
         </h:panelGrid>
     </p:dialog>    

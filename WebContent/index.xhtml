@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"  
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      >
+      
+	<h:head>
+        <title>Login</title>
+        <meta charset="utf-8"></meta>
+  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css"></link>
+    </h:head>
+     <h:body>
+     <h2>Welcome to Pfizer Online Booking System</h2>
+    <h:form>            
+  
+        <h:panelGrid columns="2" cellpadding="5">
+            <h:outputLabel for="Username" value="Username:" />
+<h:inputText id="Username" value="#{user.username}" required="true"
+               requiredMessage="Enter username"></h:inputText> 
+            
+            <h:outputLabel for="Password" value="Password:" />
+<h:inputSecret id="Password" value="#{user.password}" required="true"
+               requiredMessage="Enter password"></h:inputSecret> 
+            
+            <f:facet name="footer">
+              <h:commandButton id="mybutton" binding="#{user.mybutton}" value="Login" action ="#{user.login}"></h:commandButton>
+                  <br></br>
+                  <p:message for="mybutton" />
+              
+
+            </f:facet>  
+        </h:panelGrid>
+</h:form>
+    
+  
+    
+    </h:body>
+    </html>
+    
+    

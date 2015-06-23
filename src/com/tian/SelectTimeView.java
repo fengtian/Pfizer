@@ -13,11 +13,13 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.event.ValueChangeEvent;
 
+import org.primefaces.context.RequestContext;
 
 import com.mysql.jdbc.PreparedStatement;
 import com.mysql.jdbc.ResultSet;
@@ -217,6 +219,7 @@ public class SelectTimeView implements Serializable {
     	pstmt.setString(5, selectedSlot);
     	pstmt.setString(6, endTime);
     	pstmt.executeUpdate();
+    	RequestContext.getCurrentInstance().showMessageInDialog(new FacesMessage("Appointment booked successfully!"));
 
 	}
 	

@@ -6,15 +6,29 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.component.UIComponent;
+import javax.faces.context.FacesContext;
+import javax.faces.context.Flash;
+
+import org.primefaces.context.RequestContext;
 
 @ManagedBean(name="user")
 @SessionScoped
 public class User {
 	private String username;
 	private String password;
+    private UIComponent mybutton;
 
+
+	public UIComponent getMybutton() {
+		return mybutton;
+	}
+	public void setMybutton(UIComponent mybutton) {
+		this.mybutton = mybutton;
+	}
 	public String getUsername() {
 		return username;
 	}
@@ -29,7 +43,7 @@ public class User {
 	}
 	
 	public String login() throws SQLException, ClassNotFoundException{
-		
+		 
 		Class.forName("com.mysql.jdbc.Driver");
 
 			Connection con = DriverManager.getConnection("jdbc:mysql://localhost/Pfizer","root","");
@@ -40,7 +54,10 @@ public class User {
 			if(rs.next()){
 				return  "System.jsp";
 			}else{
-				return null;
+				FacesMessage message = new FacesMessage("Wrong username or password");
+	            FacesContext context = FacesContext.getCurrentInstance();
+	            context.addMessage(mybutton.getClientId(context), message);
+			return null;
 			}
 			
 		
